@@ -1,12 +1,12 @@
 import React from 'react'
-import firebase from '../firebase'
+import app from '../firebase'
 
 function App() {
   const [recipes, setRecipes] = React.useState([])
 
   React.useEffect(() => {
     const fetchData = async () => {
-      const db = firebase.firestore()
+      const db = app.firestore()
       const data = await db.collection("recipes").get()
       setRecipes(data.docs.map(doc => doc.data()))
     }
