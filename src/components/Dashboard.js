@@ -1,13 +1,12 @@
 import React from 'react'
 import firebase from '../firebase'
-import {Card, Col} from "react-bootstrap";
+import {Card, CardColumns, Col, ListGroup} from "react-bootstrap";
 
 
 export default function Dashboard() {
     const [recipes, setRecipes] = React.useState([{title: '', ingredients: []}])
     const fetchData = async () => {
         const db = firebase.firestore()
-        console.log(db)
         db.collection("recipes").get()
             .then(data =>
                 setRecipes(
@@ -21,23 +20,28 @@ export default function Dashboard() {
 
     return (
         <Col>
-            {recipes.map(recipe => (
-                <Card key={recipe.title}>
-                    <Card.Img variant="top" src="holder.js/100px180?text=Image cap" />
-                    <Card.Body>
-                        <Card.Title>
-                            {recipe.title}
-                        </Card.Title>
-                        <Card.Text>
-                            {recipe.ingredients.map((ingredient, index) => (
-                                <span key={index}>
-                                    {ingredient.name}
-                                </span>
-                            ))}
-                        </Card.Text>
-                    </Card.Body>
-                </Card>
-            ))}
+            <CardColumns>
+                {recipes.map(recipe => (
+                    <Card key={recipe.title}>
+                        <Card.Img variant="top" src="hero.jpg" />
+                        <Card.Body>
+                            <Card.Title>
+                                {recipe.title}
+                            </Card.Title>
+                            <Card.Text>
+                                {recipe.description}
+                            </Card.Text>
+                            <ListGroup>
+                                {recipe.ingredients.map((ingredient, index) => (
+                                    <ListGroup.Item key={index}>
+                                        {ingredient.name} - {ingredient.quantity}
+                                    </ListGroup.Item>
+                                ))}
+                            </ListGroup>
+                        </Card.Body>
+                    </Card>
+                ))}
+            </CardColumns>
         </Col>
     )
 }
