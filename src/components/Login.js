@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react"
-import { Form, Button, Card, Alert } from "react-bootstrap"
+import {Form, Button, Card, Alert, Col} from "react-bootstrap"
 import { useAuth } from "../context/AuthContext"
 import { Link, useHistory } from "react-router-dom"
 
@@ -18,7 +18,7 @@ export default function Login() {
       setError("")
       setLoading(true)
       await login(emailRef.current.value, passwordRef.current.value)
-      history.push("/")
+      history.push("/dashboard")
     } catch {
       setError("Failed to log in")
     }
@@ -27,7 +27,7 @@ export default function Login() {
   }
 
   return (
-    <>
+    <Col>
       <Card>
         <Card.Body>
           <h2 className="text-center mb-4">Log In</h2>
@@ -53,6 +53,6 @@ export default function Login() {
       <div className="w-100 text-center mt-2">
         Need an account? <Link to="/signup">Sign Up</Link>
       </div>
-    </>
+    </Col>
   )
 }
