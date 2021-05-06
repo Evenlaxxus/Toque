@@ -1,6 +1,7 @@
 import React from 'react'
 import firebase from '../firebase'
-import {Button, Card, CardColumns, Col, Form, FormControl, ListGroup, Row} from "react-bootstrap";
+import {Card, CardColumns, Col, Form, FormControl, ListGroup, Row} from "react-bootstrap";
+import AddRecipeModal from "./AddRecipeModal";
 
 
 export default function Dashboard() {
@@ -37,9 +38,7 @@ export default function Dashboard() {
         <Col>
             <Row>
                 <Col className="mb-3">
-                    <Button>
-                        Add recipe
-                    </Button>
+                    <AddRecipeModal />
                 </Col>
                 <Col xs={12} md={8} className="mb-3">
                     <Form onSubmit={submitHandler}>
