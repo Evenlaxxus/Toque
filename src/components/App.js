@@ -4,6 +4,7 @@ import {AuthProvider} from "../context/AuthContext"
 import {Container, Row} from "react-bootstrap"
 import {BrowserRouter as Router, Switch, Route} from "react-router-dom"
 import Dashboard from "./Dashboard"
+import RecipePage from "./RecipePage"
 import Login from './Login'
 import PrivateRoute from "./PrivateRoute";
 import NavbarWrapper from "./NavbarWrapper";
@@ -17,10 +18,11 @@ function App() {
                 <Row>
                     <Router>
                         <Switch>
-                            <Route exact path="/" component={Login}/>
+                            <Route exact path="/" component={Dashboard}/>
                             <Route path="/signup" component={Signup}/>
-                            <PrivateRoute path="/dashboard" component={Dashboard}/>
-                            {/*<Route path="/login" component={Login} />*/}
+                            <PrivateRoute path="/dashboard/:uid" children={<Dashboard />}/>
+                            <PrivateRoute path="/recipe/:id" children={<RecipePage />}/>
+                            <Route path="/login" component={Login} />
                         </Switch>
                     </Router>
                 </Row>

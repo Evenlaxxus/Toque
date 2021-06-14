@@ -25,10 +25,10 @@ const NavbarWrapper = () => {
         <Navbar bg="dark" variant="dark">
             <Navbar.Brand href="/">Toque</Navbar.Brand>
             <Nav className="mr-auto">
-                {isAuthenticated && (<Nav.Link href="/dashboard">Dashboard</Nav.Link>)}
+                {isAuthenticated && (<Nav.Link href="/">Dashboard</Nav.Link>)}
             </Nav>
             {isAuthenticated && (<Button className="mr-sm-2" variant="secondary" onClick={handleLogout}>Logout</Button>)}
-            {!isAuthenticated && (<Button className="mr-sm-2" variant="secondary" href="/">Login</Button>)}
+            {!isAuthenticated && (<Button className="mr-sm-2" variant="secondary" href="/login">Login</Button>)}
             {!isAuthenticated && (<Button className="mr-sm-2" variant="secondary" href="/signup">Signup</Button>)}
         </Navbar>
     )

@@ -1,6 +1,7 @@
 import React, {useState} from "react"
 import {Button, Col, FormControl, Modal, Row} from "react-bootstrap";
 import firebase from "../firebase";
+import {useAuth} from "../context/AuthContext";
 
 const AddRecipeModal = () => {
     const [show, setShow] = useState(false);
@@ -9,6 +10,9 @@ const AddRecipeModal = () => {
     const [ingredients, setIngredients] = useState([]);
     const [ingredientName, setIngredientName] = useState("");
     const [ingredientQuantity, setIngredientQuantity] = useState("");
+    const [preparation, setPreparation] = useState("");
+
+    const { currentUser } = useAuth()
 
     const handleClose = () => setShow(false);
 
@@ -28,12 +32,16 @@ const AddRecipeModal = () => {
         setIngredientQuantity("")
     }
 
+    const user = currentUser.uid
+
     const addRecipe = () => {
         const db = firebase.firestore()
         db.collection('recipes').add({
                 title,
                 description,
-                ingredients
+                ingredients,
+                preparation,
+                user
             }
         ).then(handleClose)
     };
@@ -61,11 +69,11 @@ const AddRecipeModal = () => {
 
                     <Row>
                         <Col>
-                            <FormControl className="my-2" type="text" placeholder="Ingredient Name"
+                            <FormControl value={ingredientName} className="my-2" type="text" placeholder="Ingredient Name"
                                          onChange={(event) => setIngredientName(event.target.value)}/>
                         </Col>
                         <Col>
-                            <FormControl className="my-2" type="text" placeholder="Ingredient Quantity"
+                            <FormControl value={ingredientQuantity} className="my-2" type="text" placeholder="Ingredient Quantity"
                                          onChange={(event) => setIngredientQuantity(event.target.value)}/>
                         </Col>
                     </Row>
@@ -75,6 +83,12 @@ const AddRecipeModal = () => {
                         </Col>
                         <Col>
                             <Button block type="fluid" variant="secondary" onClick={clearIngredients}>Clear Ingredients</Button>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+                            <FormControl className="my-2" as="textarea" rows={3} placeholder="Preparation method"
+                                         onChange={(event) => setPreparation(event.target.value)}/>
                         </Col>
                     </Row>
                 </Modal.Body>

@@ -2,11 +2,21 @@ import React from 'react'
 import firebase from '../firebase'
 import {Card, CardColumns, Col, Form, FormControl, ListGroup, Row} from "react-bootstrap";
 import AddRecipeModal from "./AddRecipeModal";
+import {useAuth} from "../context/AuthContext";
+import {useParams} from "react-router";
+import {Link} from "react-router-dom";
+
+export default function UserDashboard() {
+    const { uid } = useParams();
 
 
-export default function Dashboard() {
     const [recipes, setRecipes] = React.useState([])
     const [filtered, setFiltered] = React.useState([])
+
+    const { currentUser } = useAuth()
+
+    const isAuthenticated = !!currentUser
+
 
     function submitHandler(e) {
         e.preventDefault();
@@ -21,13 +31,23 @@ export default function Dashboard() {
 
     const fetchData = async () => {
         const db = firebase.firestore()
-        db.collection("recipes").get()
-            .then(data => {
-                    const res = data.docs.map(doc => doc.data())
-                    setRecipes(res)
-                    setFiltered(res)
-                }
-            )
+        if (uid) {
+            db.collection("recipes").where("user", "==", uid).get()
+                .then(data => {
+                        const res = data.docs.map((doc) => ({id: doc.id, ...doc.data()}))
+                        setRecipes(res)
+                        setFiltered(res)
+                    }
+                )
+        } else {
+            db.collection("recipes").get()
+                .then(data => {
+                        const res = data.docs.map((doc) => ({id: doc.id, ...doc.data()}))
+                        setRecipes(res)
+                        setFiltered(res)
+                    }
+                )
+        }
     }
 
     React.useEffect(() => {
@@ -37,9 +57,9 @@ export default function Dashboard() {
     return (
         <Col>
             <Row>
-                <Col className="mb-3">
+                {isAuthenticated && (<Col className="mb-3">
                     <AddRecipeModal />
-                </Col>
+                </Col>)}
                 <Col xs={12} md={8} className="mb-3">
                     <Form onSubmit={submitHandler}>
                         <FormControl type="text" placeholder="Search" onChange={filterRecipes.bind(this)}/>
@@ -48,23 +68,25 @@ export default function Dashboard() {
             </Row>
             <CardColumns>
                 {filtered.map(recipe => (
-                    <Card key={recipe.title}>
-                        <Card.Body>
-                            <Card.Title>
-                                {recipe.title}
-                            </Card.Title>
-                            <Card.Text>
-                                {recipe.description}
-                            </Card.Text>
-                            <ListGroup>
-                                {recipe.ingredients.map((ingredient, index) => (
-                                    <ListGroup.Item key={index}>
-                                        {ingredient.name} - {ingredient.quantity}
-                                    </ListGroup.Item>
-                                ))}
-                            </ListGroup>
-                        </Card.Body>
-                    </Card>
+                    <Link key={recipe.id} to={`/recipe/${recipe.id}`}>
+                        <Card>
+                            <Card.Body>
+                                <Card.Title>
+                                    {recipe.title}
+                                </Card.Title>
+                                <Card.Text>
+                                    {recipe.description}
+                                </Card.Text>
+                                <ListGroup>
+                                    {recipe.ingredients.map((ingredient, index) => (
+                                        <ListGroup.Item key={index}>
+                                            {ingredient.name} - {ingredient.quantity}
+                                        </ListGroup.Item>
+                                    ))}
+                                </ListGroup>
+                            </Card.Body>
+                        </Card>
+                    </Link>
                 ))}
             </CardColumns>
         </Col>
