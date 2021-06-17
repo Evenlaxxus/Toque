@@ -5,15 +5,16 @@ import AddRecipeModal from "./AddRecipeModal";
 import {useAuth} from "../context/AuthContext";
 import {useParams} from "react-router";
 import {Link} from "react-router-dom";
+import Rating from '@material-ui/lab/Rating';
 
 export default function UserDashboard() {
-    const { uid } = useParams();
+    const {uid} = useParams();
 
 
     const [recipes, setRecipes] = React.useState([])
     const [filtered, setFiltered] = React.useState([])
 
-    const { currentUser } = useAuth()
+    const {currentUser} = useAuth()
 
     const isAuthenticated = !!currentUser
 
@@ -58,7 +59,7 @@ export default function UserDashboard() {
         <Col>
             <Row>
                 {isAuthenticated && (<Col className="mb-3">
-                    <AddRecipeModal />
+                    <AddRecipeModal/>
                 </Col>)}
                 <Col xs={12} md={8} className="mb-3">
                     <Form onSubmit={submitHandler}>
@@ -68,25 +69,27 @@ export default function UserDashboard() {
             </Row>
             <CardColumns>
                 {filtered.map(recipe => (
-                    <Link key={recipe.id} to={`/recipe/${recipe.id}`}>
-                        <Card>
-                            <Card.Body>
+                    <Card key={recipe.id}>
+                        <Card.Body>
+                            <Link to={`/recipe/${recipe.id}`}>
                                 <Card.Title>
                                     {recipe.title}
                                 </Card.Title>
-                                <Card.Text>
-                                    {recipe.description}
-                                </Card.Text>
-                                <ListGroup>
-                                    {recipe.ingredients.map((ingredient, index) => (
-                                        <ListGroup.Item key={index}>
-                                            {ingredient.name} - {ingredient.quantity}
-                                        </ListGroup.Item>
-                                    ))}
-                                </ListGroup>
-                            </Card.Body>
-                        </Card>
-                    </Link>
+                            </Link>
+                            <Card.Text>
+                                {recipe.description}
+                                <br/>
+                                <Rating name="half-rating" defaultValue={2} precision={0.5} readOnly />
+                            </Card.Text>
+                            <ListGroup>
+                                {recipe.ingredients.map((ingredient, index) => (
+                                    <ListGroup.Item key={index}>
+                                        {ingredient.name} - {ingredient.quantity}
+                                    </ListGroup.Item>
+                                ))}
+                            </ListGroup>
+                        </Card.Body>
+                    </Card>
                 ))}
             </CardColumns>
         </Col>

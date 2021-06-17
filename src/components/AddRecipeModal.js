@@ -11,6 +11,8 @@ const AddRecipeModal = () => {
     const [ingredientName, setIngredientName] = useState("");
     const [ingredientQuantity, setIngredientQuantity] = useState("");
     const [preparation, setPreparation] = useState("");
+    const [rating, setRating] = useState(0);
+    const [ratingQuantity, setRatingQuantity] = useState(0);
 
     const { currentUser } = useAuth()
 
@@ -41,7 +43,9 @@ const AddRecipeModal = () => {
                 description,
                 ingredients,
                 preparation,
-                user
+                user,
+                rating,
+                ratingQuantity
             }
         ).then(handleClose)
     };
