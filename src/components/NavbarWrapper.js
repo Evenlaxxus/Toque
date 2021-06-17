@@ -1,7 +1,7 @@
 import React, { useState }  from "react"
 import {Button, Nav, Navbar} from "react-bootstrap";
 import { useAuth } from "../context/AuthContext"
-import { useHistory } from "react-router-dom"
+import {Link, useHistory} from "react-router-dom"
 
 const NavbarWrapper = () => {
     const [error, setError] = useState("")
@@ -26,6 +26,7 @@ const NavbarWrapper = () => {
             <Navbar.Brand href="/">Toque</Navbar.Brand>
             <Nav className="mr-auto">
                 {isAuthenticated && (<Nav.Link href="/">Dashboard</Nav.Link>)}
+                {isAuthenticated && (<Nav.Link href={`/dashboard/${currentUser.uid}`}>Your Dashboard</Nav.Link>)}
             </Nav>
             {isAuthenticated && (<Button className="mr-sm-2" variant="secondary" onClick={handleLogout}>Logout</Button>)}
             {!isAuthenticated && (<Button className="mr-sm-2" variant="secondary" href="/login">Login</Button>)}

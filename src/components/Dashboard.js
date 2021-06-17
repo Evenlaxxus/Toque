@@ -33,26 +33,36 @@ export default function UserDashboard() {
     const fetchData = async () => {
         const db = firebase.firestore()
         if (uid) {
-            db.collection("recipes").where("user", "==", uid).get()
-                .then(data => {
-                        const res = data.docs.map((doc) => ({id: doc.id, ...doc.data()}))
-                        setRecipes(res)
-                        setFiltered(res)
-                    }
-                )
+            return await db.collection("recipes").where("user", "==", uid).get()
+                .then(data => getData(data, db))
         } else {
-            db.collection("recipes").get()
-                .then(data => {
-                        const res = data.docs.map((doc) => ({id: doc.id, ...doc.data()}))
-                        setRecipes(res)
-                        setFiltered(res)
-                    }
-                )
+            return await db.collection("recipes").get()
+                .then(data => getData(data, db))
         }
     }
 
+    const getData = async (data, db) => {
+        const res = data.docs.map((doc) => ({id: doc.id, ...doc.data()}))
+
+        for (let i=0; i < res.length; i++) {
+            await db.collection("ratings").where("recipe", "==", res[i].id).get()
+                .then(data1 => {
+                    const res = data1.docs.map((doc) => ({...doc.data()}))[0]
+                    if (res === undefined) return 0
+                    const rating = res["ratings"].reduce((previousValue, currentValue) => previousValue + currentValue.rating, 0)
+                    return rating/res["ratings"].length
+                }).then(e => {
+                res[i]["rating"] = e
+            })
+        }
+        return res
+    }
+
     React.useEffect(() => {
-        fetchData()
+        fetchData().then(e => {
+            setRecipes(e)
+            setFiltered(e)
+        })
     }, [])
 
     return (
@@ -79,7 +89,7 @@ export default function UserDashboard() {
                             <Card.Text>
                                 {recipe.description}
                                 <br/>
-                                <Rating name="half-rating" defaultValue={2} precision={0.5} readOnly />
+                                <Rating name="half-rating" value={recipe.rating} precision={0.5} readOnly />
                             </Card.Text>
                             <ListGroup>
                                 {recipe.ingredients.map((ingredient, index) => (
