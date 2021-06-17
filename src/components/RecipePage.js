@@ -99,7 +99,7 @@ export default function UserDashboard() {
                                 readOnly
                             />)}
                         </Col>
-                        {currentUser.uid === recipe.user && (
+                        {isAuthenticated && currentUser.uid === recipe.user && (
                             <React.Fragment>
                                 <Col xs={12} md={3}>
                                     <AddRecipeModal edit={true} toEdit={recipe}/>
