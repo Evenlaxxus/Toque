@@ -71,11 +71,6 @@ export default function UserDashboard() {
         fetchData().then(res => setRating(res))
     }
 
-
-    const reload = () => {
-        console.log("dupa")
-    }
-
     React.useEffect(() => {
         fetchData().then(res => setRating(res))
     }, [])
@@ -107,7 +102,7 @@ export default function UserDashboard() {
                         {currentUser.uid === recipe.user && (
                             <React.Fragment>
                                 <Col xs={12} md={3}>
-                                    <AddRecipeModal edit={true} toEdit={recipe} onHide={reload}/>
+                                    <AddRecipeModal edit={true} toEdit={recipe}/>
                                 </Col>
                                 <Col xs={12} md={4}>
                                     <Button variant="primary" onClick={deleteRecipe}>
